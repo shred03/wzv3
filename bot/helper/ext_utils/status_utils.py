@@ -229,19 +229,19 @@ async def get_readable_message(sid, is_user, page_no=1, status="All", page_step=
         msg += f"<b>{index + start_position}.</b> "
         msg += f"<b><i>{escape(f'{task.name()}')}</i></b>"
         if task.listener.subname:
-            msg += f"\n┖ <b>Sub Name</b> → <i>{task.listener.subname}</i>"
+            msg += f"\n┖ <b>Sub Name</b> → <b>{task.listener.subname}</b>"
         elapsed = time() - task.listener.message.date.timestamp()
-
-        msg += f"\n\n<b>Task By: {task.listener.message.from_user.mention(style='html')} </b>"
+        msg += f"\n\n {tstatus}\n"
+        msg += f"\n<b>Task By: {task.listener.message.from_user.mention(style='html')} </b>"
         if task.listener.is_super_chat:
-            msg += f" <i>[<a href='{task.listener.message.link}'>Link</a>]</i>"
+            msg += f" <b>[<a href='{task.listener.message.link}'>Link</a>]</b>"
 
         if (
             tstatus not in [MirrorStatus.STATUS_SEED, MirrorStatus.STATUS_QUEUEUP]
             and task.listener.progress
         ):
             progress = task.progress()
-            msg += f"\n┟ {get_progress_bar_string(progress)} <i>{progress}</i>"
+            msg += f"\n{get_progress_bar_string(progress)} <b>{progress}</b>"
             if task.listener.subname:
                 subsize = f" / {get_readable_file_size(task.listener.subsize)}"
                 ac = len(task.listener.files_to_proceed)
@@ -249,10 +249,10 @@ async def get_readable_message(sid, is_user, page_no=1, status="All", page_step=
             else:
                 subsize = ""
                 count = ""
-            msg += f"\n┠ <b>Processed</b> → <i>{task.processed_bytes()}{subsize} of {task.size()}</i>"
+            msg += f"\n<b>Processed</b> <b>{task.processed_bytes()}{subsize} of {task.size()}</b>"
             if count:
                 msg += f"\n<b>Count:</b> <b>{count}</b>"
-            msg += f"\n<b>Status:</b> <b>{tstatus}</b>"
+            # msg += f"\n<b>Status:</b> <b>{tstatus}</b>"
             msg += f"\n<b>Speed:</b> <b>{task.speed()}</b>"
             msg += f"\n<b>Time:</b> <b>{task.eta()} of {get_readable_time(elapsed + get_raw_time(task.eta()))} ( {get_readable_time(elapsed)} )</b>"
             if tstatus == MirrorStatus.STATUS_DOWNLOAD and (
@@ -265,7 +265,7 @@ async def get_readable_message(sid, is_user, page_no=1, status="All", page_step=
             # TODO: Add Connected Peers
         elif tstatus == MirrorStatus.STATUS_SEED:
             msg += f"\n<b>Size:</b> <b>{task.size()}</b> | <b>Uploaded:</b> <b>{task.uploaded_bytes()}</b>"
-            msg += f"\n<b>Status:</b> <b>{tstatus}</b>"
+            # msg += f"\n<b>Status:</b> <b>{tstatus}</b>"
             msg += f"\n<b>Speed:</b> <b>{task.seed_speed()}</b>"
             msg += f"\n<b>Ratio:</b> <b>{task.ratio()}</b>"
             msg += f"\n<b>Time:</b> <b>{task.seeding_time()}</b> | <b>Elapsed:</b> <b>{get_readable_time(elapsed)}</b>"
